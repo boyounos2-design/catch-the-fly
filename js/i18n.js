@@ -91,6 +91,9 @@ var EN={
   pt_incision:'At incision', pt_post:'Post-operative',
 
   or_room:'Operating room', or_none:'— Not recorded', or_date:'Date', or_start:'Start time', or_end:'End time',
+  sync_title:'Cloud sync (Firebase)', sync_status:'Status', sync_on:'Connected', sync_off:'Not configured', sync_error:'Error', sync_connecting:'Connecting…',
+  sync_push:'Push all data now', sync_pushed:'Synced to the cloud',
+  sync_note:'When configured, all data is shared online through Firebase Firestore: any visitor saves to one shared database and sees updates from other devices in real time. When offline, changes are kept on this device and pushed automatically. Reminder: cloud data is only as safe as your Firebase access rules.',
   or_prev:'Previous case in the same room', or_prevcount:'Number of previous procedures that day',
   or_env:'Any environmental / OR problem', or_sterility:'Any reported break in sterility',
   or_instr:'Instrument problem', or_pack:'Implant packaging problem', or_other:'Other OR concern',
@@ -361,6 +364,9 @@ var AR={
   pt_incision:'عند الشق', pt_post:'بعد العملية',
 
   or_room:'غرفة العمليات', or_none:'— غير مسجلة', or_date:'التاريخ', or_start:'وقت البدء', or_end:'وقت الانتهاء',
+  sync_title:'المزامنة السحابية (Firebase)', sync_status:'الحالة', sync_on:'متصل', sync_off:'غير مفعلة', sync_error:'خطأ', sync_connecting:'جارٍ الاتصال…',
+  sync_push:'مزامنة كل البيانات الآن', sync_pushed:'تمت المزامنة مع السحابة',
+  sync_note:'عند تفعيلها تُخزَّن كل البيانات اونلاين عبر Firebase Firestore: أي زائر يحفظ في قاعدة مشتركة واحدة ويرى تحديثات الأجهزة الأخرى فورًا. عند غياب الإنترنت تُحفظ التغييرات على الجهاز وتُرصد تلقائيًا. تذكير: أمان البيانات السحابية يعتمد على قواعد الوصول في Firebase.',
   or_prev:'الحالة السابقة في نفس الغرفة', or_prevcount:'عدد الإجراءات السابقة في نفس اليوم',
   or_env:'أي مشكلة بيئية / في الغرفة', or_sterility:'أي خرق معقم مبلّغ عنه',
   or_instr:'مشكلة في الأدوات', or_pack:'مشكلة في تغليف الزرعة', or_other:'شواغل أخرى بالغرفة',

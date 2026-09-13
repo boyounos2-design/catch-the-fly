@@ -188,6 +188,8 @@ textarea.inp{min-height:80px;resize:vertical;}
 .fab.hide{display:none;}
 .empty{text-align:center;color:var(--muted);padding:34px 10px;font-size:14px;}
 .muted{color:var(--muted);}
+.sync-ok{color:var(--ok);font-weight:700;}
+.sync-err{color:var(--err);font-weight:700;}
 .small{font-size:12px;}
 .mt{margin-top:12px;}
 .mb{margin-bottom:12px;}

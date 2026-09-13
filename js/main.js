@@ -243,6 +243,7 @@ var actions={
     U.toast(T('set_saved'),'ok');
     route();
   },
+  'sync-now':function(){ App.Sync.pushAll().then(function(){ U.toast(T('sync_pushed'),'ok'); },function(e){ U.toast(e.message,'err'); }); },
   'add-org-item':async function(){ var n=valOf('newOrg'); if(!n) return; await App.DB.put('organisms',{id:'o-'+U.uid(),name:n,inactive:false}); await refreshAfterDataChange(); route(); },
   'del-org-item':async function(el,d){ if(!U.confirm(T('confirm_delete_case'))) return; await App.DB.del('organisms',d.id); await refreshAfterDataChange(); route(); },
   'set-add-item':async function(el,d){
@@ -431,13 +432,15 @@ function boot(){
   window.addEventListener('online',setNet);
   window.addEventListener('offline',setNet);
   window.addEventListener('hashchange',function(){ route(); });
+  App.Sync.onRemoteChange=function(){ route(); };
+  App.Sync.wrap(App.DB);
   App.DB.open().then(function(){
     return App.DB.loadConfig();
   }).then(function(cfg){
     App.CONFIG=cfg;
     applyLang(cfg.lang||'ar');
-    return App.DB.count('cases');
-  }).then(function(n){
+    return App.Sync.init();
+  }).then(function(){ return App.DB.count('cases'); }).then(function(n){
     if(n===0){
       var wantDemo=false;
       try{ wantDemo=window.confirm(App.LANG==='ar'?'لا توجد بيانات بعد. تحميل البيانات التجريبية التركيبية؟':'No data found. Load synthetic demo data?'); }catch(e){}

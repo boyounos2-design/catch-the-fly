@@ -710,6 +710,11 @@ App.views.backup=function(){
 App.views.settings=function(){
   var cfg=App.CONFIG;
   var h='<div class="screen-title"><h2>'+T('set_title')+'</h2></div>';
+  var stMap={online:'<span class="sync-ok">'+T('sync_on')+'</span>',connecting:'<span>'+T('sync_connecting')+'</span>',error:'<span class="sync-err">'+T('sync_error')+'</span>',disabled:'<span class="muted">'+T('sync_off')+'</span>'};
+  h+=U.card('<h3 class="sec-t">'+T('sync_title')+'</h3>'+
+    '<div class="two">'+U.ff(T('sync_status'),'<div class="inp">'+(stMap[App.Sync.status]||'<span>-</span>')+'</div>')+U.ff('',U.btn(T('sync_push'),'sync-now',{},'sec'))+'</div>'+
+    '<p class="small muted mt">'+T('sync_note')+'</p>'
+  );
   h+=U.card('<h3 class="sec-t">'+T('set_lang')+'</h3><div class="two">'+
     U.ff(T('set_lang'),U.sel('cfgLang',[{v:'ar',l:'العربية'},{v:'en',l:'English'}],App.LANG))+
     U.ff(T('set_hospital'),U.inp('cfgHospital',cfg.hospital))+ '</div>'+

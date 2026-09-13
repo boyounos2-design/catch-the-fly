@@ -2,7 +2,7 @@
 
 وحدة ترصد محلية (تعمل دون إنترنت / Offline First) لتسجيل حالات عدوى ما بعد العمليات الجراحية للعظام، وتحليل الاتجاهات، واكتشاف التجمعات المشتبه بها (Potential Clusters)، وتصدير البيانات للبحث.
 
-A fully offline, Progressive Web App for recording and analyzing orthopedic surgical-site infection (SSI) cases. Data never leaves the device.
+A fully offline, Progressive Web App for recording and analyzing orthopedic surgical-site infection (SSI) cases. Data never leaves the device unless you enable the optional cloud sync below.
 
 > **تنبيه الخصوصية | Privacy warning**: تجنّب إدخال أي معلومات شخصية غير ضرورية. Avoid entering unnecessary personally identifiable information. This app stores clinical data locally on the device; users are responsible for protecting the device and following hospital data-protection policies.
 
@@ -53,23 +53,57 @@ Then open `http://localhost:3000`.
 2. Repo **Settings → Pages → Build and deployment → Source: Deploy from a branch** → select `main` (or your default branch) and folder `/ (root)` → Save.
 3. The site will be published at `https://<user>.github.io/<repo>/`.
 4. All asset paths are relative (`./js/...`, `./sw.js`, `./icons/...`), so it works from any subpath without configuration.
-5. Remember: the app is fully static — GitHub Pages only hosts the files; there is **no server code** and no data collection.
+5. Remember: the app is fully static — GitHub Pages only hosts the files; there is **no server code**.
+6. Data sharing between visitors is optional and only happens through Firebase (see *Cloud sync* below).
 
 ---
 
 ## Offline / PWA
 
-`sw.js` precaches the app shell (HTML, CSS, JS, manifest, icons) and serves it cache-first, with runtime caching for same-origin GET requests and `./` as the offline fallback. Once visited online, the app works fully offline.
+`sw.js` precaches the app shell (HTML, CSS, JS, manifest, icons). The fetch handler is **network-first**: when online you always get the newest files (and they are cached), when offline the cached copy is used with `./` as the fallback. Once visited online, the app works fully offline.
 
 - Manifest: `manifest.webmanifest` (standalone display, `#0d5c73` theme, icons `192`/`512`).
 - Icons regenerable via `tools/gen-icons.js` (`node tools/gen-icons.js`).
 
 ---
 
+## Optional cloud sync (Firebase Firestore)
+
+By default every device stores all data **locally** (IndexedDB). To make all visitors share **one online database**, enable Firebase:
+
+1. Go to [console.firebase.google.com](https://console.firebase.google.com), create a project.
+2. **Add app → Web** and copy the `firebaseConfig` values into `js/firebase-config.js` (they are public client-side keys).
+3. **Build → Firestore Database → Create database** (choose a region; production mode is fine).
+4. **Set Security Rules** so the app can read/write — for a small trusted team, the simplest rule set is:
+
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /ctf/{document} {
+         allow read, write: if true;
+       }
+     }
+   }
+   ```
+
+   > ⚠️ WARNING: these open rules allow **anyone** with the site URL to read/write all data, and the data is medical. Restrict them as soon as you can (e.g. Firebase Auth with email/password or a shared anonymous login, then `if request.auth != null`). Never put unprotected patient-identifying data online.
+
+5. Redeploy. The **Settings → Cloud sync (Firebase)** card shows the connection status and has a *Push all data now* button.
+
+How it works:
+
+- Entities are mirrored to Firestore collection `ctf` as documents named `{store}:{id}`; last write wins by `updatedAt`.
+- Case IDs come from a shared Firestore counter (no duplicate `CTF-YYYY-####` between devices when online).
+- Local writes are queued and pushed with retry; remote changes stream in live via `onSnapshot`.
+- If `js/firebase-config.js` is left empty, the app behaves exactly as before (fully offline, local-only).
+
+---
+
 ## Backup & privacy
 
 - **Backup / Export** screen: download `backup.json` (all stores) or `research.csv`; import the JSON to restore or transfer data to another device; **Delete all data** wipes everything permanently.
-- Because data lives only in the browser profile, take backups regularly and store them safely (e.g., encrypted hospital storage).
+- Because data lives only in the browser profile (unless cloud sync is enabled, in which case it also lives in your Firebase project), take backups regularly and store them safely (e.g., encrypted hospital storage).
 - The demo data (13 complete cases + 2 drafts, 4 exposure records, 2026 date range) is clearly flagged in the UI. Remove it via *Settings → Load synthetic demo data → no* after loading real workflow, or *Backup → Delete all data* before first real use.
 
 ---
@@ -91,6 +125,8 @@ css/style.css       All styling (responsive, RTL/LTR, print)
 js/i18n.js          EN/AR dictionaries + App.t()
 js/core.js          Utilities, multi-select & searchable-select widgets, constants
 js/db.js            IndexedDB layer (settings, lists, cases, exposures)
+js/sync.js          Optional Firebase Firestore cloud sync (both directions)
+js/firebase-config.js Firebase project keys (empty = offline-only mode)
 js/analytics.js     Stats, filters, trends, combos, clusters, staff summary, statistics
 js/export.js        Research CSV, JSON backup/import, monthly & cluster reports
 js/seed.js          Synthetic demo dataset + loader

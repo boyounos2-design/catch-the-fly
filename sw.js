@@ -1,4 +1,4 @@
-var CACHE_NAME='ortho-inf-surv-v6';
+var CACHE_NAME='ortho-inf-surv-v7';
 var ASSETS=[
   './',
   './index.html',
@@ -6,11 +6,13 @@ var ASSETS=[
   './js/i18n.js',
   './js/core.js',
   './js/db.js',
+  './js/sync.js',
   './js/analytics.js',
   './js/export.js',
   './js/seed.js',
   './js/views.js',
   './js/main.js',
+  './js/firebase-config.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png'
