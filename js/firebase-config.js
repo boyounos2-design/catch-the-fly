@@ -13,10 +13,10 @@
    visitor's own device).
    ========================================================================== */
 window.FIREBASE_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyDGUg_8gplU0DBh90Z9FvGLey8oVHy7Oyw",
+  authDomain: "catch-the-fly.firebaseapp.com",
+  projectId: "catch-the-fly",
+  storageBucket: "catch-the-fly.firebasestorage.app",
+  messagingSenderId: "1058850470512",
+  appId: "1:1058850470512:web:cd24aa22d02bbb2539d2b5"
 };

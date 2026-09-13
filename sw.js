@@ -1,4 +1,4 @@
-var CACHE_NAME='ortho-inf-surv-v7';
+var CACHE_NAME='ortho-inf-surv-v8';
 var ASSETS=[
   './',
   './index.html',
